@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { CssBaseline } from '@mui/material';
+import { createTheme, ThemeProvider } from '@mui/material';
+import React, { useEffect } from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { UserProvider } from './providers/UserProvider';
+import { useUser } from './hooks/useUser';
+import { RootRoutes } from './RootRoutes';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const theme = createTheme({
+	palette: {
+		primary: {
+			main: '#1da578',
+		},
+		background: {
+			default: '#f8fcfb',
+		},
+	},
+});
 
-export default App;
+export const UserInitialization: React.FC = props => {
+	const user = useUser();
+
+	// check login state
+	useEffect(() => {
+		user.ensureLogin();
+	}, []);
+
+	return <></>;
+};
+
+export const App: React.FC = props => {
+	return (
+		<BrowserRouter>
+			<ThemeProvider theme={theme}>
+				<UserProvider>
+					<UserInitialization />
+					<CssBaseline />
+
+					<RootRoutes />
+				</UserProvider>
+			</ThemeProvider>
+		</BrowserRouter>
+	);
+};
